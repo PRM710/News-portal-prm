@@ -19,10 +19,18 @@ const NewsBoard = ({ category }) => {
 
         const response = await fetch(url);
         const data = await response.json();
-        setArticles(data.articles);
-        setTotalResults(data.totalResults);
+
+        // Only set articles if data.articles is an array
+        if (data && Array.isArray(data.articles)) {
+          setArticles(data.articles);
+          setTotalResults(data.totalResults || 0);
+        } else {
+          console.error("Unexpected API response structure:", data);
+          setArticles([]); // Set to an empty array if there's an error
+        }
       } catch (error) {
         console.error('Error fetching news articles:', error);
+        setArticles([]); // Set to an empty array if there's an error
       }
     };
 
